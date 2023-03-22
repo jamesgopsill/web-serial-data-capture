@@ -18,6 +18,9 @@ export async function disconnect(this: SerialLogger) {
 	this._port = undefined
 	this._reader = undefined
 	this._readableStreamClosed = undefined
+
+	this._viewport.append("disconnected\n")
 }
 
+//Refs.
 // https://stackoverflow.com/questions/71262432/how-can-i-close-a-web-serial-port-that-ive-piped-through-a-transformstream

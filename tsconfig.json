@@ -3,6 +3,6 @@
 	"extends": "@tsconfig/esm",
 	"compilerOptions": {
 		"lib": ["DOM", "ES2022"],
-		"moduleResolution": "bundler"
+		"moduleResolution": "node"
 	}
 }

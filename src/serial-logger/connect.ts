@@ -32,4 +32,6 @@ export async function connect(this: SerialLogger, baudRate: number) {
 	this._reader = reader
 
 	this._read()
+
+	this._viewport.append("Connected\n")
 }
