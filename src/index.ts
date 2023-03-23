@@ -23,6 +23,7 @@ resetBtn.addEventListener("click", () => {
 	console.log("Reset Btn Clicked")
 	logger.reset()
 	plotter.redraw([])
+	viewport.innerHTML = "Reset Clicked.\n"
 })
 
 const startBtn = document.getElementById("start") as HTMLButtonElement
@@ -37,8 +38,8 @@ const stopBtn = document.getElementById("stop") as HTMLButtonElement
 stopBtn.addEventListener("click", () => {
 	console.log("Stop Btn Clicked")
 	logger.stop()
-	stopBtn.disabled = false
-	startBtn.disabled = true
+	stopBtn.disabled = true
+	startBtn.disabled = false
 })
 
 const downloadBtn = document.getElementById("download") as HTMLButtonElement

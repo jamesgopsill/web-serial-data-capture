@@ -19,14 +19,16 @@ export async function read(this: SerialLogger) {
 			const elements = line.split(",")
 			// append the results to the data dictionary
 			for (const [i, value] of elements.entries()) {
-				if (this.data[i]) {
+				if (this.data[i] != undefined) {
 					this.data[i].push(parseFloat(value))
 				} else {
+					console.log("setting data")
 					this.data[i] = [parseFloat(value)]
 				}
 			}
+			// update counter
 			if (this.data[-1]) {
-				this.data[11].push(this._counter)
+				this.data[-1].push(this._counter)
 			} else {
 				this.data[-1] = [this._counter]
 			}

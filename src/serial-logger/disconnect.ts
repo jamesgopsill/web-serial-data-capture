@@ -19,7 +19,7 @@ export async function disconnect(this: SerialLogger) {
 	this._reader = undefined
 	this._readableStreamClosed = undefined
 
-	this._viewport.append("disconnected\n")
+	this._viewport.append("Disconnected\n")
 }
 
 //Refs.
