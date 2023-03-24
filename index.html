@@ -44,6 +44,22 @@
 							Connect
 						</button>
 					</div>
+					<div class="input-group input-group-sm mb-3">
+						<input
+							type="text"
+							class="form-control"
+							value="hello"
+							id="message"
+						/>
+						<button
+							class="btn btn-outline-primary"
+							type="button"
+							id="send"
+							disabled
+						>
+							Send Message
+						</button>
+					</div>
 					<div class="input-group input-group-sm">
 						<button class="btn btn-outline-primary" id="start" disabled>
 							Start
@@ -71,7 +87,7 @@
 							<option value="5">Column 5</option>
 						</select>
 						<label class="input-group-text">Y Axis</label>
-						<select class="form-select" id="y-axis-select" multiple size="2">
+						<select class="form-select" id="y-axis-select" multiple size="5">
 							<option selected value="0">Column 0</option>
 							<option value="1">Column 1</option>
 							<option value="2">Column 2</option>
@@ -82,6 +98,15 @@
 						<button class="btn btn-outline-primary" id="refresh">
 							Refresh
 						</button>
+					</div>
+					<div class="form-check form-switch">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							role="switch"
+							id="live"
+						/>
+						<label class="form-check-label">Live Refresh (1 sec)</label>
 					</div>
 					<div id="plot"></div>
 				</div>

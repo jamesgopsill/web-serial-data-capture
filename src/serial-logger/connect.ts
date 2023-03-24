@@ -33,5 +33,11 @@ export async function connect(this: SerialLogger, baudRate: number) {
 
 	this._read()
 
+	const encoder = new TextEncoderStream()
+	this._writableStreamClosed = encoder.readable.pipeTo(this._port.writable)
+	this._writer = encoder.writable.getWriter()
+
+	this._log = true
+
 	this._viewport.append("Connected\n")
 }

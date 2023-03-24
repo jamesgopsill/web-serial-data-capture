@@ -10,6 +10,10 @@ export class SerialLogger {
 	protected _port: any = undefined
 	protected _reader: ReadableStreamDefaultReader = undefined
 	protected _readableStreamClosed: any = undefined
+
+	protected _writer: WritableStreamDefaultWriter = undefined
+	protected _writableStreamClosed: Promise<void>
+
 	protected _counter: number = 0
 	protected _log: boolean = true
 
@@ -20,6 +24,7 @@ export class SerialLogger {
 
 	public connect = connect
 	public disconnect = disconnect
+	public download = download
 	public reset = () => {
 		this.data = {}
 		this._counter = 0
@@ -30,7 +35,9 @@ export class SerialLogger {
 	public stop = () => {
 		this._log = false
 	}
-	public download = download
+	public write = (line: string) => {
+		if (this._writer !== undefined) this._writer.write(line + "\n")
+	}
 
 	protected _read = read
 }

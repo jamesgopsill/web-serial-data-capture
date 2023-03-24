@@ -8,6 +8,9 @@ export async function disconnect(this: SerialLogger) {
 		/* Ignore the error */
 	})
 
+	this._writer.close()
+	await this._writableStreamClosed
+
 	this._port.close()
 
 	//@ts-expect-error
@@ -16,8 +19,14 @@ export async function disconnect(this: SerialLogger) {
 	}
 
 	this._port = undefined
+
 	this._reader = undefined
 	this._readableStreamClosed = undefined
+
+	this._writer = undefined
+	this._writableStreamClosed = undefined
+
+	this._log = false
 
 	this._viewport.append("Disconnected\n")
 }

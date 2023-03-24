@@ -8,14 +8,15 @@ connectBtn.addEventListener("click", () => {
 	logger.connect(parseInt(baud.value))
 	startBtn.disabled = true
 	stopBtn.disabled = false
+	sendMessageBtn.disabled = false
 })
 
 const disconnectBtn = document.getElementById("disconnect") as HTMLButtonElement
 disconnectBtn.addEventListener("click", () => {
 	console.log("Disconnect Btn Clicked")
 	logger.disconnect()
-	startBtn.disabled = false
-	stopBtn.disabled = false
+	startBtn.disabled = true
+	stopBtn.disabled = true
 })
 
 const resetBtn = document.getElementById("reset") as HTMLButtonElement
@@ -48,6 +49,12 @@ downloadBtn.addEventListener("click", () => {
 	logger.download()
 })
 
+const sendMessageBtn = document.getElementById("send") as HTMLButtonElement
+sendMessageBtn.addEventListener("click", () => {
+	console.log("Send Message Btn Clicked")
+	logger.write(message.value)
+})
+
 const refreshPlotBtn = document.getElementById("refresh") as HTMLButtonElement
 refreshPlotBtn.addEventListener("click", () => {
 	console.log("Refresh Plot Btn Clicked")
@@ -60,12 +67,18 @@ refreshPlotBtn.addEventListener("click", () => {
 
 	if (!logger.data[x]) {
 		alert("No data logged on the x axis.")
+		clearInterval(liveRefreshInterval)
+		liveRefreshInterval = undefined
+		liveRefresh.checked = false
 		return
 	}
 
 	for (const y of yIndices) {
 		if (!logger.data[y]) {
 			alert(`No data logged on y axis column ${y}`)
+			clearInterval(liveRefreshInterval)
+			liveRefreshInterval = undefined
+			liveRefresh.checked = false
 			return
 		}
 	}
@@ -85,6 +98,7 @@ refreshPlotBtn.addEventListener("click", () => {
 
 const viewport = document.getElementById("log") as HTMLPreElement
 const baud = document.getElementById("baud") as HTMLInputElement
+const message = document.getElementById("message") as HTMLInputElement
 
 const xAxisSelect = document.getElementById(
 	"x-axis-select"
@@ -105,3 +119,16 @@ yAxisSelect.addEventListener("change", () => {
 
 const logger = new SerialLogger(viewport)
 const plotter = new Plotter("plot")
+
+let liveRefreshInterval: number = undefined
+const liveRefresh = document.getElementById("live") as HTMLInputElement
+liveRefresh.addEventListener("change", () => {
+	if (liveRefresh.checked) {
+		liveRefreshInterval = setInterval(() => {
+			refreshPlotBtn.click()
+		}, 1000)
+	} else {
+		clearInterval(liveRefreshInterval)
+		liveRefreshInterval = undefined
+	}
+})
