@@ -8,9 +8,7 @@ export async function connect(this: SerialLogger, baudRate: number) {
 	}
 
 	try {
-		this._port = await navigator.serial
-			//@ts-expect-error
-			.requestPort()
+		this._port = await navigator.serial.requestPort()
 	} catch (err: any) {
 		console.log(err)
 		alert("No port selected.")
@@ -24,6 +22,9 @@ export async function connect(this: SerialLogger, baudRate: number) {
 
 	await this._port.open({ baudRate: baudRate })
 
+	this._log = true
+	this.reset()
+
 	const textDecoder = new TextDecoderStream()
 	this._readableStreamClosed = this._port.readable.pipeTo(textDecoder.writable)
 	const reader = textDecoder.readable
@@ -33,5 +34,9 @@ export async function connect(this: SerialLogger, baudRate: number) {
 
 	this._read()
 
-	this._viewport.append("Connected\n")
+	const encoder = new TextEncoderStream()
+	this._writableStreamClosed = encoder.readable.pipeTo(this._port.writable)
+	this._writer = encoder.writable.getWriter()
+
+	this._viewport.insertAdjacentHTML("afterbegin", "<b>Connected.</b>\n")
 }

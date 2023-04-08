@@ -8,22 +8,24 @@ connectBtn.addEventListener("click", () => {
 	logger.connect(parseInt(baud.value))
 	startBtn.disabled = true
 	stopBtn.disabled = false
+	sendMessageBtn.disabled = false
 })
 
 const disconnectBtn = document.getElementById("disconnect") as HTMLButtonElement
 disconnectBtn.addEventListener("click", () => {
 	console.log("Disconnect Btn Clicked")
 	logger.disconnect()
-	startBtn.disabled = false
-	stopBtn.disabled = false
+	startBtn.disabled = true
+	stopBtn.disabled = true
+	viewport.innerHTML = "<b>Disconnect Clicked.</b>\n"
 })
 
-const resetBtn = document.getElementById("reset") as HTMLButtonElement
-resetBtn.addEventListener("click", () => {
+const clearBtn = document.getElementById("clear") as HTMLButtonElement
+clearBtn.addEventListener("click", () => {
 	console.log("Reset Btn Clicked")
 	logger.reset()
 	plotter.redraw([])
-	viewport.innerHTML = "Reset Clicked.\n"
+	viewport.innerHTML = "<b>Clear Clicked.</b>\n"
 })
 
 const startBtn = document.getElementById("start") as HTMLButtonElement
@@ -32,6 +34,7 @@ startBtn.addEventListener("click", () => {
 	logger.start()
 	startBtn.disabled = true
 	stopBtn.disabled = false
+	viewport.innerHTML = "<b>Start Clicked.</b>\n"
 })
 
 const stopBtn = document.getElementById("stop") as HTMLButtonElement
@@ -40,12 +43,31 @@ stopBtn.addEventListener("click", () => {
 	logger.stop()
 	stopBtn.disabled = true
 	startBtn.disabled = false
+	viewport.innerHTML = "<b>Stop Clicked.</b>\n"
 })
 
-const downloadBtn = document.getElementById("download") as HTMLButtonElement
-downloadBtn.addEventListener("click", () => {
+const downloadDataBtn = document.getElementById(
+	"download-data"
+) as HTMLButtonElement
+downloadDataBtn.addEventListener("click", () => {
 	console.log("Download Btn Clicked")
-	logger.download()
+	logger.downloadData()
+	viewport.innerHTML = "<b>Download Data Clicked.</b>\n"
+})
+
+const downloadMessagesBtn = document.getElementById(
+	"download-messages"
+) as HTMLButtonElement
+downloadMessagesBtn.addEventListener("click", () => {
+	console.log("Download Btn Clicked")
+	logger.downloadMessages()
+	viewport.innerHTML = "<b>Download Messages Clicked.</b>\n"
+})
+
+const sendMessageBtn = document.getElementById("send") as HTMLButtonElement
+sendMessageBtn.addEventListener("click", () => {
+	console.log("Send Message Btn Clicked")
+	logger.write(message.value)
 })
 
 const refreshPlotBtn = document.getElementById("refresh") as HTMLButtonElement
@@ -60,12 +82,18 @@ refreshPlotBtn.addEventListener("click", () => {
 
 	if (!logger.data[x]) {
 		alert("No data logged on the x axis.")
+		clearInterval(liveRefreshInterval)
+		liveRefreshInterval = undefined
+		liveRefresh.checked = false
 		return
 	}
 
 	for (const y of yIndices) {
 		if (!logger.data[y]) {
 			alert(`No data logged on y axis column ${y}`)
+			clearInterval(liveRefreshInterval)
+			liveRefreshInterval = undefined
+			liveRefresh.checked = false
 			return
 		}
 	}
@@ -85,6 +113,7 @@ refreshPlotBtn.addEventListener("click", () => {
 
 const viewport = document.getElementById("log") as HTMLPreElement
 const baud = document.getElementById("baud") as HTMLInputElement
+const message = document.getElementById("message") as HTMLInputElement
 
 const xAxisSelect = document.getElementById(
 	"x-axis-select"
@@ -105,3 +134,16 @@ yAxisSelect.addEventListener("change", () => {
 
 const logger = new SerialLogger(viewport)
 const plotter = new Plotter("plot")
+
+let liveRefreshInterval: number = undefined
+const liveRefresh = document.getElementById("live") as HTMLInputElement
+liveRefresh.addEventListener("change", () => {
+	if (liveRefresh.checked) {
+		liveRefreshInterval = setInterval(() => {
+			refreshPlotBtn.click()
+		}, 1000)
+	} else {
+		clearInterval(liveRefreshInterval)
+		liveRefreshInterval = undefined
+	}
+})

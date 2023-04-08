@@ -8,18 +8,26 @@ export async function disconnect(this: SerialLogger) {
 		/* Ignore the error */
 	})
 
+	this._writer.close()
+	await this._writableStreamClosed
+
 	this._port.close()
 
-	//@ts-expect-error
 	if ("serial" in navigator && "forget" in SerialPort.prototype) {
 		await this._port.forget()
 	}
 
 	this._port = undefined
+
 	this._reader = undefined
 	this._readableStreamClosed = undefined
 
-	this._viewport.append("Disconnected\n")
+	this._writer = undefined
+	this._writableStreamClosed = undefined
+
+	this._log = false
+
+	this._viewport.insertAdjacentHTML("afterbegin", "<b>Disconnected.</b>\n")
 }
 
 //Refs.
