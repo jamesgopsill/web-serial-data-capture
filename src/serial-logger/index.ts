@@ -15,9 +15,6 @@ export class SerialLogger {
 	protected _writer: WritableStreamDefaultWriter = undefined
 	protected _writableStreamClosed: Promise<void>
 
-	protected _writer: WritableStreamDefaultWriter = undefined
-	protected _writableStreamClosed: Promise<void>
-
 	protected _counter: number = 0
 	protected _log: boolean = true
 

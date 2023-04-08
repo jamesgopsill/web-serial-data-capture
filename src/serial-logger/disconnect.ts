@@ -11,9 +11,6 @@ export async function disconnect(this: SerialLogger) {
 	this._writer.close()
 	await this._writableStreamClosed
 
-	this._writer.close()
-	await this._writableStreamClosed
-
 	this._port.close()
 
 	if ("serial" in navigator && "forget" in SerialPort.prototype) {
